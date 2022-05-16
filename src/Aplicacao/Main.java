@@ -18,7 +18,7 @@ public class Main extends Application {
         
         Scene scene = new Scene(root);
         
-        stage.setTitle("Template ...");
+        stage.setTitle("Login Diario");
         stage.setScene(scene);
         stage.show();
     }
