@@ -1,5 +1,8 @@
-package Aplicacao;
+package Aplicacao.Registar;
 
+
+
+import Aplicacao.Main.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -12,7 +15,7 @@ import javafx.scene.control.TextField;
  *
  * @author jpc
  */
-public class FXMLDocumentController implements Initializable {
+public class RegistarViewController implements Initializable {
 
     @FXML
     TextField txfNome;
