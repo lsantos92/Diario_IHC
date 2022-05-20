@@ -1,7 +1,5 @@
 package Aplicacao.Login;
 
-
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -11,14 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import Conectar.Conect;
-
-import javax.swing.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 /**
  * FXML Controller class
  *
@@ -36,32 +31,33 @@ public class LoginViewController implements Initializable {
     Button btLogin;
     @FXML
     Button btRegistar;
-    
 
     @FXML
     public void buttonRegistar(ActionEvent e) {
-           // ABRE OUTRA JANELA
+        // ABRE OUTRA JANELA
     }
 
     @FXML
-    public void buttonLogin(ActionEvent e){
+    public void buttonLogin(ActionEvent e) {
         String username = txfUsername.getText();
         String password = txfPassword.getText();
-          try { // V
-              Connection con = Conectar.Conect.getCon();
-                      Statement st =con.createStatement();
-                      String query = "Select * from ihc";
-                      ResultSet rs = st.executeQuery(query);
-                      while(rs.next()){
-                          String user = rs.getString("username");
-                          String passw = rs.getString("password");
-                          if(user.equals(username) && password.equals(passw)){
-                              System.out.println("U");
-                          }
-                      }
-          } catch (SQLException c) {
-                    JOptionPane.showMessageDialog(null, c, "ERROR", JOptionPane.ERROR_MESSAGE);
-                }
+        try { // Vai buscar as passwords e verifica se existe alguma igual
+            Connection con = Conectar.Conect.getCon();
+            Statement st = con.createStatement();
+            String query = "SELECT * FROM ihc WHERE username = '" + username + "' and password = md5('" + password + "');";
+            // CONTROLO System.out.println(query);
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()) {
+
+                lblErro.setText("LOGIN FEITO COM SUCESSO!");
+
+            } else {
+
+                lblErro.setText("Os dados que inseriu não estão válidos!");
+            }
+        } catch (SQLException c) {
+            System.out.println(c.getMessage());
+        }
     }
 
     /**
@@ -70,6 +66,7 @@ public class LoginViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+
     }
 
 }

@@ -1,14 +1,18 @@
 package Aplicacao.Registar;
 
 
-
-import Aplicacao.Main.*;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 
 /**
  * FXML Controller class
@@ -18,25 +22,55 @@ import javafx.scene.control.TextField;
 public class RegistarViewController implements Initializable {
 
     @FXML
-    TextField txfNome;
+    TextField txfUsername;
     @FXML
-    TextField txfCurso;
+    TextField txfemail;
     @FXML
-    TextField txfNum;
+    PasswordField txfPassword;
+    @FXML
+    PasswordField txfConfPassword;
+    @FXML
+    Label lblErro;
 
     @FXML
     public void buttonRegistar(ActionEvent e) {
-        String nome = txfNome.getText();
-        String curso = txfCurso.getText();
-        String numero = txfNum.getText();
-        System.out.println("Ola " + " " + nome +" "+ curso+ " " + numero);
+        String Username = txfUsername.getText();
+        String email = txfemail.getText();
+        String password = txfPassword.getText();
+        String confpass = txfConfPassword.getText();
+        if (Username.equals("") || email.equals("") | password.equals("") || confpass.equals("")) { // estar algum vazio
+            lblErro.setText("Tem de ter todos os dados preenchidos!");
+        } else {
+            if (password.equals(confpass)) { // passwords iguais
+                // Verificar se existe algum igual na base de dados
+
+                try { // Vai buscar as passwords e verifica se existe alguma igual
+                    Connection con = Conectar.Conect.getCon();
+                    Statement st = con.createStatement();
+                    String query = "SELECT * FROM ihc WHERE username = '" + Username + "' or email = '" + email + "';";
+                    // CONTROLO System.out.println(query);
+                    ResultSet rs = st.executeQuery(query);
+                    if (rs.next()) {
+
+                        lblErro.setText("Já existe um utilizador com esse email/username!");
+
+                    } else { // quer dizer que passou em todas as condições e assim podemos adicionar a base de dados!
+                        query = "Insert into ihc(username, email, password) values('"+Username+"', '"+email+"', md5('"+password+"'));";
+                       st.executeUpdate(query);
+                        lblErro.setText("Registado com sucesso!");
+                    }
+                } catch (SQLException c) {
+                    System.out.println(c.getMessage());
+                }
+            } else { // passwords diferentes
+                lblErro.setText("As passwords que inseriu não coincidem!");
+            }
+        }
     }
 
     @FXML
     public void buttonCancelar(ActionEvent e) {
-        txfNome.clear();
-        txfCurso.clear();
-        txfNum.clear();
+        //Volta para o login
     }
 
     /**
