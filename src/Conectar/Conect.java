@@ -1,18 +1,23 @@
 
 package Conectar;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
+
 
 public class Conect {
     public static Connection getCon() {
         try {
-            String url = "jdbc:sqlserver://localhost:3306;databaseName=login;";
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/login";
             Connection connection = DriverManager.getConnection(url,"root","zaXXfbWqVDCNE29");
-            return connection;
-        } catch (SQLException exception) {
-            throw new RuntimeException("Nao foi possivel conectar à BD!", exception);
+            if(connection != null){
+                System.out.println("Conectar ao servidor...");
+            }
+           return connection;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Erro ao conectar!");
+            return null;
         }
     }
 }
