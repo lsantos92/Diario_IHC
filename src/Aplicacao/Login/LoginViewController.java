@@ -9,11 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import Conectar.Conect;
-
-import javax.swing.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,23 +41,22 @@ public class LoginViewController implements Initializable {
     public void buttonLogin(ActionEvent e) {
         String username = txfUsername.getText();
         String password = txfPassword.getText();
-        try { // V
+        try { // Vai buscar as passwords e verifica se existe alguma igual
             Connection con = Conectar.Conect.getCon();
             Statement st = con.createStatement();
-            String query = "Select * from login.ihc";
+            String query = "SELECT * FROM ihc WHERE username = '" + username + "' and password = md5('" + password + "');";
+            // CONTROLO System.out.println(query);
             ResultSet rs = st.executeQuery(query);
-            while (rs.next()) {
-                String user = rs.getString("username");
-                String passw = rs.getString("password");
-                if (user.equals(username) && password.equals(passw)) {
-                    System.out.println("U");
-                } else {
+            if (rs.next()) {
 
-                    JOptionPane.showMessageDialog(null, "Os dados que inseriu ou estão errados ou ainda não se registou!", "Dados Incorretos", JOptionPane.WARNING_MESSAGE);
-                }
+                lblErro.setText("LOGIN FEITO COM SUCESSO!");
+
+            } else {
+
+                lblErro.setText("Os dados que inseriu não estão válidos!");
             }
         } catch (SQLException c) {
-            JOptionPane.showMessageDialog(null, c, "ERROR", JOptionPane.ERROR_MESSAGE);
+            System.out.println(c.getMessage());
         }
     }
 
@@ -71,10 +66,7 @@ public class LoginViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        try {//Para meter a interface mais clean!
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception exception) {
-        }
+
     }
 
 }
