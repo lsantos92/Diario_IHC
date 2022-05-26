@@ -1,5 +1,7 @@
 package Aplicacao.Login;
 
+import Aplicacao.Main;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -13,6 +15,11 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -20,7 +27,7 @@ import java.sql.SQLException;
  * @author jpc
  */
 public class LoginViewController implements Initializable {
-
+    private Main m;
     @FXML
     TextField txfUsername;
     @FXML
@@ -33,12 +40,17 @@ public class LoginViewController implements Initializable {
     Button btRegistar;
 
     @FXML
-    public void buttonRegistar(ActionEvent e) {
-        // ABRE OUTRA JANELA
+    public void buttonRegistar(ActionEvent e) throws IOException {
+        Parent RegistarParent = FXMLLoader.load(getClass().getResource("../Registar/RegistarView.fxml"));
+        Scene RegistarScene = new Scene(RegistarParent);
+
+        Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        window.setScene(RegistarScene);
+        window.show();
     }
 
     @FXML
-    public void buttonLogin(ActionEvent e) {
+    public void buttonLogin(ActionEvent e) throws IOException {
         String username = txfUsername.getText();
         String password = txfPassword.getText();
         try { // Vai buscar as passwords e verifica se existe alguma igual
@@ -49,8 +61,14 @@ public class LoginViewController implements Initializable {
             ResultSet rs = st.executeQuery(query);
             if (rs.next()) {
 
-                lblErro.setText("LOGIN FEITO COM SUCESSO!");
-
+                m.setUser(username);
+                Parent MenuParent = FXMLLoader.load(getClass().getResource("../Menu/MenuView.fxml"));
+                Scene MenuScene = new Scene(MenuParent);
+                
+                Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+                window.setScene(MenuScene);
+                
+                window.show();
             } else {
 
                 lblErro.setText("Os dados que inseriu não estão válidos!");
@@ -68,5 +86,8 @@ public class LoginViewController implements Initializable {
         // TODO
 
     }
+    	public void setMainApp(Main mainApp) {
+		this.m = mainApp;
+	}
 
 }

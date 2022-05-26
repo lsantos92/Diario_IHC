@@ -1,5 +1,6 @@
 package Aplicacao;
 
+import java.io.IOException;
 import java.sql.Connection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,23 +13,31 @@ import javafx.stage.Stage;
  * @author jpc
  */
 public class Main extends Application {
-    
+    private static String user;
+        
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("Registar/RegistarView.fxml"));
-        
+        stage.setResizable(false);
+        Parent root = FXMLLoader.load(getClass().getResource("Login/LoginView.fxml"));
         Scene scene = new Scene(root);
-       
         stage.setTitle("Login Diario");
         stage.setScene(scene);
         stage.show();
     }
 
-    /**
-     * @param args designed without arguments.
-     */
     public static void main(String[] args) {
         launch(args);
     }
+    
+     
     
 }

@@ -1,6 +1,6 @@
 package Aplicacao.Registar;
 
-
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -9,10 +9,15 @@ import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -55,8 +60,8 @@ public class RegistarViewController implements Initializable {
                         lblErro.setText("Já existe um utilizador com esse email/username!");
 
                     } else { // quer dizer que passou em todas as condições e assim podemos adicionar a base de dados!
-                        query = "Insert into ihc(username, email, password) values('"+Username+"', '"+email+"', md5('"+password+"'));";
-                       st.executeUpdate(query);
+                        query = "Insert into ihc(username, email, password) values('" + Username + "', '" + email + "', md5('" + password + "'));";
+                        st.executeUpdate(query);
                         lblErro.setText("Registado com sucesso!");
                     }
                 } catch (SQLException c) {
@@ -69,8 +74,13 @@ public class RegistarViewController implements Initializable {
     }
 
     @FXML
-    public void buttonCancelar(ActionEvent e) {
-        //Volta para o login
+    public void buttonCancelar(ActionEvent e) throws IOException {
+        Parent RegistarParent = FXMLLoader.load(getClass().getResource("../Login/LoginView.fxml"));
+        Scene RegistarScene = new Scene(RegistarParent);
+
+        Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        window.setScene(RegistarScene);
+        window.show();
     }
 
     /**
